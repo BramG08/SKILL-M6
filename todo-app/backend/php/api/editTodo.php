@@ -1,8 +1,9 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Methods: PATCH, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header('Content-Type: application/json');
+
 
 require_once('../connect.php');
 
@@ -14,11 +15,10 @@ if (empty($data['text'])) {
 }
 
 $text = $data['text'];
+$id = $data['id'];
+$stmt = $mysqli->prepare("UPDATE ToDo SET text=? WHERE id = ?");
+$stmt->bind_param("si", $text, $id);
 
-$stmt = $mysqli->prepare("INSERT INTO ToDo (text, status) VALUES (?, ?)");
-
-$status = "todo";
-$stmt->bind_param("ss", $text, $status);
 
 if ($stmt->execute()) {
     echo "Success!";
